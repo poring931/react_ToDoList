@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import { Context } from '../../..';
+import React, { useContext, useState } from 'react';
 import CreateTodoItem from './CreateTodoItem/CreateTodoItem';
 import RemoveAllTodoItems from './RemoveAllTodoItems/RemoveAllTodoItems';
 import TodoItem from './todoItem/TodoItem';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
+import firebase from 'firebase/compat/app';
 
 const data = [
     {   
@@ -22,6 +25,16 @@ const data = [
 ]
 const Home = () => {
 
+
+     const {auth, firestore} = useContext(Context)
+    const [value, setValue] = useState('')
+    console.log(firestore)
+
+     const [todolist, loading] = useCollectionData(
+        firestore.collection('todolist').orderBy('createAt')
+    )
+
+
     const[todos, setTodos] = useState(data)
 
     const changeTodoItem = (id) => {
@@ -31,7 +44,14 @@ const Home = () => {
         setTodos(copy)
     }
 
-
+    const testSend = async () =>{
+        console.log(firestore)
+        firestore.collection('todolist').add({
+            _id: new Date(),
+            Title: 'zxczxcxzcxzc',
+            createAt: firebase.firestore.FieldValue.serverTimestamp()
+        })
+    }
 
     const removeTodoItem = (id) => {
        
@@ -40,6 +60,7 @@ const Home = () => {
 
     return (
         <div className='text-white w-4/5 mx-auto'>
+            <div onClick={testSend}> Добавить тест</div>
             <h1 className='text-2xl  font-bold text-center mb-4 '>TodoList</h1>
             {
                 todos.map((todo) => (
