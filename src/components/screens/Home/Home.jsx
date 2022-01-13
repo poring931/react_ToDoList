@@ -28,13 +28,13 @@ const Home = () => {
 
      const {auth, firestore} = useContext(Context)
     const [value, setValue] = useState('')
-    console.log(firestore)
 
-     const [todolist, loading] = useCollectionData(
-        firestore.collection('todolist').orderBy('createAt')
+   
+    const [test, loading] = useCollectionData(
+        firestore.collection('todolist').orderBy('createAt') //тут получаем данные. пока х3 как засунуть их
     )
-
-
+    console.log(test)
+    console.log(loading)
     const[todos, setTodos] = useState(data)
 
     const changeTodoItem = (id) => {
