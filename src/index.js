@@ -34,7 +34,6 @@ const app = firebase.initializeApp(firebaseConfig);
 
 
 export const Context = createContext(null)
-// const auth = app.auth();
 const firestore = app.firestore();
 
 ReactDOM.render(

@@ -1,5 +1,5 @@
 import { Context } from '../../..';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import CreateTodoItem from './CreateTodoItem/CreateTodoItem';
 import RemoveAllTodoItems from './RemoveAllTodoItems/RemoveAllTodoItems';
 import TodoItem from './todoItem/TodoItem';
@@ -21,21 +21,20 @@ const data = [
         _id:'wewesdsds32323',
         title: 'Send the finish assigment',
         isCompleted: false,
+
     },
 ]
 const Home = () => {
 
 
-     const {auth, firestore} = useContext(Context)
-    const [value, setValue] = useState('')
+     const { auth,firestore} = useContext(Context)
 
-   
-    const [test, loading] = useCollectionData(
-        firestore.collection('todolist').orderBy('createAt') //тут получаем данные. пока х3 как засунуть их
+
+      const [list, loading] = useCollectionData(
+        firestore.collection('todolist') //тут получаем данные. пока х3 как засунуть их
     )
-    console.log(test)
-    console.log(loading)
-    const[todos, setTodos] = useState(data)
+    const [todos, setTodos] = useState(list)
+
 
     const changeTodoItem = (id) => {
         const copy = [...todos]
@@ -45,11 +44,12 @@ const Home = () => {
     }
 
     const testSend = async () =>{
-        console.log(firestore)
         firestore.collection('todolist').add({
-            _id: new Date(),
-            Title: 'zxczxcxzcxzc',
+            _id: new Date().getMilliseconds() / 0.33,
+            isCompleted: false,
+            title: 'sssadasdsadss',
             createAt: firebase.firestore.FieldValue.serverTimestamp()
+
         })
     }
 
@@ -62,11 +62,19 @@ const Home = () => {
         <div className='text-white w-4/5 mx-auto'>
             <div onClick={testSend}> Добавить тест</div>
             <h1 className='text-2xl  font-bold text-center mb-4 '>TodoList</h1>
+            {console.log(list)}
+           
             {
-                todos.map((todo) => (
-                    <TodoItem key={todo._id} todo={todo} changeTodoItem={changeTodoItem} removeTodoItem={removeTodoItem}/>
-                ))
+             list ? (
+                 list.map((todo) => (
+                            <TodoItem key={todo._id} todo={todo} changeTodoItem={changeTodoItem} removeTodoItem={removeTodoItem}/>
+                        ))
+                    ) 
+                    :
+                    (<div></div>)
+                     
             }
+
             <CreateTodoItem setTodos={setTodos}/>
             <RemoveAllTodoItems setTodos={setTodos}/>
         </div>
